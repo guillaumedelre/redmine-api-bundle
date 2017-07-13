@@ -5,6 +5,8 @@ namespace Gdelre\RedmineApiBundle\DependencyInjection\Compiler;
 use Gdelre\RedmineApiBundle\Interfaces\EntrypointInterface;
 use Gdelre\RedmineApiBundle\Service\Entrypoint;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Psr7\UriNormalizer;
 use GuzzleHttp\RequestOptions;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -24,21 +26,34 @@ class RedmineClientPass implements CompilerPassInterface
         if (empty($config['base_uri'])) {
             throw new \Exception('The base_uri parameter must be configured.');
         }
+        $baseUri = self::getUri($config['base_uri']);
 
-        if (empty($config['credential']['username'])
-            && empty($config['credential']['password'])
-            && empty($config['credential']['api_key'])
-        ) {
-            throw new \Exception('The credential parameter must be configured.');
+        $hasUsername = !empty($config['credential']['username']);
+        $hasPassword = !empty($config['credential']['password']);
+        $hasApiKey = !empty($config['credential']['api_key']);
+
+        if ($hasApiKey && $hasPassword) {
+            $baseUri = self::getUri(
+                $baseUri->withUserInfo(
+                    $config['credential']['api_key']
+                )->__toString()
+            );
+        } elseif ($hasUsername && $hasPassword) {
+            $baseUri = self::getUri(
+                $baseUri->withUserInfo(
+                    $config['credential']['username'],
+                    $config['credential']['password']
+                )->__toString()
+            );
         } else {
-            $clientSettings[RequestOptions::AUTH] = [
-                $config['credential']['username'],
-                $config['credential']['password'],
-            ];
+            throw new \Exception('The credential parameter must be configured.');
         }
 
+        $clientSettings[RequestOptions::AUTH] = explode(':', $baseUri->getUserInfo());
+
         foreach (EntrypointInterface::ENTRYPOINTS as $definition) {
-            $clientSettings['base_uri'] = $config['base_uri'] . $definition['path'];
+            $baseUri = self::getUri($baseUri->withPath($definition['path'])->__toString());
+            $clientSettings['base_uri'] = $baseUri->withUserInfo('')->__toString();
 
             // Create Guzzle Client With the right BaseUri
             $container->setDefinition(
@@ -64,4 +79,15 @@ class RedmineClientPass implements CompilerPassInterface
             );
         }
     }
+
+    /**
+     * @param string $url
+     *
+     * @return \Psr\Http\Message\UriInterface
+     */
+    private static function getUri(string $url)
+    {
+        return UriNormalizer::normalize(new Uri($url), UriNormalizer::PRESERVING_NORMALIZATIONS | UriNormalizer::REMOVE_DUPLICATE_SLASHES);
+    }
+
 }
