@@ -25,6 +25,11 @@ class Project
     protected $description;
 
     /**
+     * @var int
+     */
+    protected $status;
+
+    /**
      * @var \DateTime
      */
     protected $createdOn;
@@ -115,6 +120,26 @@ class Project
     public function setDescription(string $description): Project
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     *
+     * @return Project
+     */
+    public function setStatus(int $status)
+    {
+        $this->status = $status;
 
         return $this;
     }

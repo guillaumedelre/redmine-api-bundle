@@ -6,8 +6,20 @@ services:
         calls:
             - [ 'setDenormalizer', ['@serializer'] ]
 
+    gdelre_redmine_api.serialization.denormalizer.json.response:
+        class: 'Gdelre\RedmineApiBundle\Serializer\Denormalizer\ResponseDenormalizer'
+        parent: 'gdelre_redmine_api.serialization.denormalizer.json.base'
+        tags:
+            - { name: 'serializer.normalizer', priority: 256 }
+
     gdelre_redmine_api.serialization.denormalizer.json.project:
         class: 'Gdelre\RedmineApiBundle\Serializer\Denormalizer\ProjectDenormalizer'
+        parent: 'gdelre_redmine_api.serialization.denormalizer.json.base'
+        tags:
+            - { name: 'serializer.normalizer', priority: 128 }
+
+    gdelre_redmine_api.serialization.denormalizer.json.issue:
+        class: 'Gdelre\RedmineApiBundle\Serializer\Denormalizer\IssueDenormalizer'
         parent: 'gdelre_redmine_api.serialization.denormalizer.json.base'
         tags:
             - { name: 'serializer.normalizer', priority: 128 }

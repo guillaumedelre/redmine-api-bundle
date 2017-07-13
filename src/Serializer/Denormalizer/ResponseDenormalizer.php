@@ -2,10 +2,9 @@
 
 namespace Gdelre\RedmineApiBundle\Serializer\Denormalizer;
 
-use Gdelre\RedmineApiBundle\Entity\Project;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-class ProjectDenormalizer implements DenormalizerInterface
+class ResponseDenormalizer implements DenormalizerInterface
 {
     /**
      * @var DenormalizerInterface
@@ -26,19 +25,20 @@ class ProjectDenormalizer implements DenormalizerInterface
 
     public function denormalize($data, $class, $format = null, array $context = [])
     {
-        return (new Project())
-            ->setId($data['id'])
-            ->setName($data['name'])
-            ->setIdentifier($data['identifier'])
-            ->setDescription($data['description'])
-            ->setStatus($data['status'])
-            ->setIsPublic($data['is_public'])
-            ->setCreatedOn(\DateTime::createFromFormat(DATE_ISO8601, $data['created_on']))
-            ->setUpdatedOn(\DateTime::createFromFormat(DATE_ISO8601, $data['updated_on']));
+        return $this->denormalizer->denormalize(
+            $data[$context['data_key']],
+            'array' === $data['@type'] ? $class . '[]' : $class,
+            $format,
+            $context
+        );
     }
 
     public function supportsDenormalization($data, $type, $format = null, array $context = [])
     {
-        return $type === Project::class;
+        return isset($context['data_key'])
+            && isset($data['@total_count'])
+            && isset($data['@offset'])
+            && isset($data['@limit'])
+            && isset($data['@type']);
     }
 }

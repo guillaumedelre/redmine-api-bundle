@@ -1,3 +1,6 @@
+imports:
+  - { resource: 'serializer/denormalizers.yml' }
+
 services:
 #    gdelre_redmine_api.example:
 #        class: Gdelre\RedmineApiBundle\Example

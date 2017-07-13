@@ -10,34 +10,34 @@ class Issue
     protected $id;
 
     /**
-     * @var int
+     * @var ValueObject|null
      */
     protected $project;
 
     /**
-     * @var int
+     * @var ValueObject|null
      */
     protected $tracker;
 
     /**
-     * @var int
+     * @var ValueObject|null
      */
     protected $status;
 
     /**
-     * @var int
+     * @var ValueObject|null
      */
     protected $priority;
 
     /**
-     * @var int
+     * @var ValueObject|null
      */
     protected $author;
 
     /**
-     * @var int
+     * @var ValueObject|null
      */
-    protected $category;
+    protected $assignedTo;
 
     /**
      * @var string
@@ -50,12 +50,12 @@ class Issue
     protected $description = '';
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     protected $startDate;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     protected $dueDate;
 
@@ -65,9 +65,14 @@ class Issue
     protected $doneRatio = 0;
 
     /**
-     * @var int
+     * @var bool
      */
-    protected $estimatedHours;
+    protected $isPrivate = false;
+
+    /**
+     * @var float
+     */
+    protected $estimatedHours = 0;
 
     /**
      * @var array
@@ -85,292 +90,324 @@ class Issue
     protected $updatedOn;
 
     /**
+     * @var \DateTime|null
+     */
+    protected $closedOn;
+
+    /**
      * @return int
      */
     public function getId(): int
-{
-    return $this->id;
-}
+    {
+        return $this->id;
+    }
 
     /**
      * @param int $id
      *
      * @return Issue
      */
-    public function setId(int $id): Issue
-{
-    $this->id = $id;
+    public function setId(int $id)
+    {
+        $this->id = $id;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
-     * @return int
+     * @return ValueObject|null
      */
-    public function getProject(): int
-{
-    return $this->project;
-}
+    public function getProject()
+    {
+        return $this->project;
+    }
 
     /**
-     * @param int $project
+     * @param ValueObject|null $project
      *
      * @return Issue
      */
-    public function setProject(int $project): Issue
-{
-    $this->project = $project;
+    public function setProject(ValueObject $project = null)
+    {
+        $this->project = $project;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
-     * @return int
+     * @return ValueObject|null
      */
-    public function getTracker(): int
-{
-    return $this->tracker;
-}
+    public function getTracker()
+    {
+        return $this->tracker;
+    }
 
     /**
-     * @param int $tracker
+     * @param ValueObject $tracker
+     *
+     * @return Issue|null
+     */
+    public function setTracker(ValueObject $tracker = null)
+    {
+        $this->tracker = $tracker;
+
+        return $this;
+    }
+
+    /**
+     * @return ValueObject|null
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param ValueObject|null $status
      *
      * @return Issue
      */
-    public function setTracker(int $tracker): Issue
-{
-    $this->tracker = $tracker;
+    public function setStatus(ValueObject $status = null)
+    {
+        $this->status = $status;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
-     * @return int
+     * @return ValueObject|null
      */
-    public function getStatus(): int
-{
-    return $this->status;
-}
+    public function getPriority()
+    {
+        return $this->priority;
+    }
 
     /**
-     * @param int $status
+     * @param ValueObject|null $priority
      *
      * @return Issue
      */
-    public function setStatus(int $status): Issue
-{
-    $this->status = $status;
+    public function setPriority(ValueObject $priority = null)
+    {
+        $this->priority = $priority;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
-     * @return int
+     * @return ValueObject|null
      */
-    public function getPriority(): int
-{
-    return $this->priority;
-}
+    public function getAuthor()
+    {
+        return $this->author;
+    }
 
     /**
-     * @param int $priority
+     * @param ValueObject|null $author
      *
      * @return Issue
      */
-    public function setPriority(int $priority): Issue
-{
-    $this->priority = $priority;
+    public function setAuthor(ValueObject $author = null)
+    {
+        $this->author = $author;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
-     * @return int
+     * @return ValueObject|null
      */
-    public function getAuthor(): int
-{
-    return $this->author;
-}
+    public function getAssignedTo()
+    {
+        return $this->assignedTo;
+    }
 
     /**
-     * @param int $author
+     * @param ValueObject|null $assignedTo
      *
      * @return Issue
      */
-    public function setAuthor(int $author): Issue
-{
-    $this->author = $author;
+    public function setAssignedTo(ValueObject $assignedTo = null)
+    {
+        $this->assignedTo = $assignedTo;
 
-    return $this;
-}
-
-    /**
-     * @return int
-     */
-    public function getCategory(): int
-{
-    return $this->category;
-}
-
-    /**
-     * @param int $category
-     *
-     * @return Issue
-     */
-    public function setCategory(int $category): Issue
-{
-    $this->category = $category;
-
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * @return string
      */
     public function getSubject(): string
-{
-    return $this->subject;
-}
+    {
+        return $this->subject;
+    }
 
     /**
      * @param string $subject
      *
      * @return Issue
      */
-    public function setSubject(string $subject): Issue
-{
-    $this->subject = $subject;
+    public function setSubject(string $subject)
+    {
+        $this->subject = $subject;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * @return string
      */
     public function getDescription(): string
-{
-    return $this->description;
-}
+    {
+        return $this->description;
+    }
 
     /**
      * @param string $description
      *
      * @return Issue
      */
-    public function setDescription(string $description): Issue
-{
-    $this->description = $description;
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getStartDate(): \DateTime
-{
-    return $this->startDate;
-}
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
 
     /**
-     * @param \DateTime $startDate
+     * @param \DateTime|null $startDate
      *
      * @return Issue
      */
-    public function setStartDate(\DateTime $startDate): Issue
-{
-    $this->startDate = $startDate;
+    public function setStartDate(\DateTime $startDate = null)
+    {
+        $this->startDate = $startDate;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getDueDate(): \DateTime
-{
-    return $this->dueDate;
-}
+    public function getDueDate()
+    {
+        return $this->dueDate;
+    }
 
     /**
-     * @param \DateTime $dueDate
+     * @param \DateTime|null $dueDate
      *
      * @return Issue
      */
-    public function setDueDate(\DateTime $dueDate): Issue
-{
-    $this->dueDate = $dueDate;
+    public function setDueDate(\DateTime $dueDate = null)
+    {
+        $this->dueDate = $dueDate;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * @return int
      */
     public function getDoneRatio(): int
-{
-    return $this->doneRatio;
-}
+    {
+        return $this->doneRatio;
+    }
 
     /**
      * @param int $doneRatio
      *
      * @return Issue
      */
-    public function setDoneRatio(int $doneRatio): Issue
-{
-    $this->doneRatio = $doneRatio;
+    public function setDoneRatio(int $doneRatio)
+    {
+        $this->doneRatio = $doneRatio;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
-     * @return int
+     * @return bool
      */
-    public function getEstimatedHours(): int
-{
-    return $this->estimatedHours;
-}
+    public function isPrivate(): bool
+    {
+        return $this->isPrivate;
+    }
 
     /**
-     * @param int $estimatedHours
+     * @param bool $isPrivate
      *
      * @return Issue
      */
-    public function setEstimatedHours(int $estimatedHours): Issue
-{
-    $this->estimatedHours = $estimatedHours;
+    public function setIsPrivate(bool $isPrivate)
+    {
+        $this->isPrivate = $isPrivate;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
-     * @return array
+     * @return float
+     */
+    public function getEstimatedHours(): float
+    {
+        return $this->estimatedHours;
+    }
+
+    /**
+     * @param float $estimatedHours
+     *
+     * @return Issue
+     */
+    public function setEstimatedHours(float $estimatedHours)
+    {
+        $this->estimatedHours = $estimatedHours;
+
+        return $this;
+    }
+
+    /**
+     * @return ValueObject[]
      */
     public function getCustomFields(): array
-{
-    return $this->customFields;
-}
+    {
+        return $this->customFields;
+    }
 
     /**
      * @param array $customFields
      *
      * @return Issue
      */
-    public function setCustomFields(array $customFields): Issue
-{
-    $this->customFields = $customFields;
+    public function setCustomFields(array $customFields)
+    {
+        $this->customFields = [];
 
-    return $this;
-}
+        foreach ($customFields as $customField) {
+            $this->customFields[] = (new ValueObject())
+                ->setId($customField['@id'])
+                ->setName($customField['@name'])
+                ->setValue($customField['value']);
+        }
+
+        return $this;
+    }
 
     /**
      * @return \DateTime
      */
     public function getCreatedOn(): \DateTime
-{
-    return $this->createdOn;
-}
+    {
+        return $this->createdOn;
+    }
 
     /**
      * @param \DateTime $createdOn
@@ -378,29 +415,49 @@ class Issue
      * @return Issue
      */
     public function setCreatedOn(\DateTime $createdOn)
-{
-    $this->createdOn = $createdOn;
+    {
+        $this->createdOn = $createdOn;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * @return \DateTime
      */
     public function getUpdatedOn(): \DateTime
-{
-    return $this->updatedOn;
-}
+    {
+        return $this->updatedOn;
+    }
 
     /**
      * @param \DateTime $updatedOn
      *
      * @return Issue
      */
-    public function setUpdatedOn(\DateTime $updatedOn): Issue
-{
-    $this->updatedOn = $updatedOn;
+    public function setUpdatedOn(\DateTime $updatedOn)
+    {
+        $this->updatedOn = $updatedOn;
 
-    return $this;
-}
+        return $this;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getClosedOn()
+    {
+        return $this->closedOn;
+    }
+
+    /**
+     * @param \DateTime|null $closedOn
+     *
+     * @return Issue
+     */
+    public function setClosedOn(\DateTime $closedOn = null)
+    {
+        $this->closedOn = $closedOn;
+
+        return $this;
+    }
 }

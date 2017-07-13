@@ -40,6 +40,7 @@ interface EntrypointInterface
             'name'           => 'issue',
             'path'           => '/issues',
             'resource_class' => Issue::class,
+            'format'         => 'xml',
         ],
         [
             'name'           => 'issue_status',
@@ -55,6 +56,7 @@ interface EntrypointInterface
             'name'           => 'issue_priority',
             'path'           => '/enumerations/issue_priorities',
             'resource_class' => IssuePriority::class,
+            'format'         => 'xml',
         ],
         [
             'name'           => 'news',
@@ -65,6 +67,7 @@ interface EntrypointInterface
             'name'           => 'project',
             'path'           => '/projects',
             'resource_class' => Project::class,
+            'format'         => 'xml',
         ],
 //        [
 //            'name'           => 'project_news',

@@ -9,7 +9,6 @@ use Gdelre\RedmineApiBundle\Interfaces\RedmineClientAwareInterface;
 use Gdelre\RedmineApiBundle\Traits\RedmineClientAwareTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -23,6 +22,8 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
     use LoggerAwareTrait,
         SerializerAwareTrait,
         RedmineClientAwareTrait;
+
+    const DEFAULT_FORMAT = 'xml';
 
     /**
      * @var string
@@ -58,7 +59,8 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
         $this->redmineClient = $redmineClient;
         $this->name = $definition['name'];
         $this->resourceClass = $definition['resource_class'];
-        $this->path = $definition['path'];
+        $defaultFormat = $definition['format'] ?? self::DEFAULT_FORMAT;
+        $this->path = "$definition[path].$defaultFormat";
     }
 
     /**
@@ -112,8 +114,9 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
         try {
             $object = $this->serializer->deserialize(
                 $response->getBody()->getContents(),
-                $this->resourceClass.'[]',
-                RequestOptions::JSON
+                $this->resourceClass,
+                'xml',
+                ['data_key' => $this->name]
             );
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
@@ -124,12 +127,12 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
     }
 
     /**
+     * @param string $uri
      * @param array $options
      *
      * @return object
-     * @throws EntrypointRequestException
      */
-    public function get(array $options = [])
+    public function get(string $uri = '', array $options = [])
     {
         $this->validateResource();
 
@@ -137,10 +140,9 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
 
         try {
             /** @var ResponseInterface $response */
-            $response = $this->redmineClient->get($this->path, $options);
+            $response = $this->redmineClient->get($this->path . $uri, $options);
         } catch (RequestException $e) {
             $this->logger->error($e->getMessage());
-            throw new EntrypointRequestException();
         }
 
         return $this->deserialize($response);

@@ -22,6 +22,7 @@ class RedmineClientPass implements CompilerPassInterface
 
         $clientSettings = [];
         $clientSettings['timeout'] = $config['timeout'];
+        $clientSettings[RequestOptions::VERIFY] = false;
 
         if (empty($config['base_uri'])) {
             throw new \Exception('The base_uri parameter must be configured.');
@@ -35,7 +36,8 @@ class RedmineClientPass implements CompilerPassInterface
         if ($hasApiKey && $hasPassword) {
             $baseUri = self::getUri(
                 $baseUri->withUserInfo(
-                    $config['credential']['api_key']
+                    $config['credential']['api_key'],
+                    rand(100000, 199999)
                 )->__toString()
             );
         } elseif ($hasUsername && $hasPassword) {
