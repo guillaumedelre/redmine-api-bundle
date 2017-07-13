@@ -16,7 +16,7 @@ use Gdelre\RedmineApiBundle\Entity\Tracker;
 use Gdelre\RedmineApiBundle\Entity\User;
 
 /**
- * todo handle url with special char when psr7ize them in RedmineClientPass 
+ * todo handle url with special char when psr7ize them in RedmineClientPass
  */
 interface EntrypointInterface
 {

@@ -1,0 +1,13 @@
+services:
+    gdelre_redmine_api.serialization.denormalizer.json.base:
+        public: false
+        autowire: true
+        abstract: true
+        calls:
+            - [ 'setDenormalizer', ['@serializer'] ]
+
+    gdelre_redmine_api.serialization.denormalizer.json.project:
+        class: 'Gdelre\RedmineApiBundle\Serializer\Denormalizer\ProjectDenormalizer'
+        parent: 'gdelre_redmine_api.serialization.denormalizer.json.base'
+        tags:
+            - { name: 'serializer.normalizer', priority: 128 }

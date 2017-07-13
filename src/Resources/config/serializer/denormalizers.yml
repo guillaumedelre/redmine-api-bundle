@@ -1,0 +1,2 @@
+imports:
+    - { resource: 'denormalizers/json.yml' }

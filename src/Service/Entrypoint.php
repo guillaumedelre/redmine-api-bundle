@@ -112,7 +112,7 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
         try {
             $object = $this->serializer->deserialize(
                 $response->getBody()->getContents(),
-                $this->resourceClass,
+                $this->resourceClass.'[]',
                 RequestOptions::JSON
             );
         } catch (\Exception $e) {
