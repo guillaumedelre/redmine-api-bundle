@@ -2,13 +2,12 @@
 
 namespace Gdelre\RedmineApiBundle\Service;
 
-use Gdelre\RedmineApiBundle\Exception\EntrypointConnectException;
 use Gdelre\RedmineApiBundle\Exception\EntrypointException;
 use Gdelre\RedmineApiBundle\Exception\EntrypointRequestException;
+use Gdelre\RedmineApiBundle\Exception\EntrypointSerializationException;
 use Gdelre\RedmineApiBundle\Interfaces\RedmineClientAwareInterface;
 use Gdelre\RedmineApiBundle\Traits\RedmineClientAwareTrait;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
@@ -43,10 +42,10 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
     /**
      * Entrypoint constructor.
      *
-     * @param LoggerInterface     $logger
+     * @param LoggerInterface $logger
      * @param SerializerInterface $serializer
-     * @param Client              $redmineClient
-     * @param array               $definition
+     * @param Client $redmineClient
+     * @param array $definition
      */
     public function __construct(
         LoggerInterface $logger,
@@ -65,26 +64,24 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
     /**
      * @param array $options
      *
-     * @return null|object
+     * @return object
+     * @throws EntrypointRequestException
      */
     public function head(array $options = [])
     {
         $this->validateResource();
+
         // todo handle parameters
+
         try {
             /** @var ResponseInterface $response */
-            dump($this->path, $options, $this->redmineClient->getConfig());
             $response = $this->redmineClient->head($this->path, $options);
-            $object = $this->serializer->deserialize(
-                $response->getBody()->getContents(),
-                $this->resourceClass,
-                RequestOptions::JSON
-            );
-
-            return $object;
-        } catch (\Exception $e) {
+        } catch (RequestException $e) {
             $this->logger->error($e->getMessage());
+            throw new EntrypointRequestException();
         }
+
+        return $this->deserialize($response);
     }
 
     /**
@@ -105,10 +102,31 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
     }
 
     /**
+     * @param ResponseInterface $response
+     *
+     * @return object
+     * @throws EntrypointSerializationException
+     */
+    private function deserialize(ResponseInterface $response)
+    {
+        try {
+            $object = $this->serializer->deserialize(
+                $response->getBody()->getContents(),
+                $this->resourceClass,
+                RequestOptions::JSON
+            );
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw new EntrypointSerializationException();
+        }
+
+        return $object;
+    }
+
+    /**
      * @param array $options
      *
-     * @return null|object
-     * @throws EntrypointConnectException
+     * @return object
      * @throws EntrypointRequestException
      */
     public function get(array $options = [])
@@ -120,132 +138,103 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
         try {
             /** @var ResponseInterface $response */
             $response = $this->redmineClient->get($this->path, $options);
-        } catch (ConnectException $e) {
-            throw new EntrypointConnectException();
         } catch (RequestException $e) {
+            $this->logger->error($e->getMessage());
             throw new EntrypointRequestException();
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-
-            return null;
         }
 
-        try {
-            $object = $this->serializer->deserialize(
-                $response->getBody()->getContents(),
-                $this->resourceClass,
-                RequestOptions::JSON
-            );
-
-            return $object;
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-
-            return null;
-        }
+        return $this->deserialize($response);
     }
 
     /**
      * @param array $options
      *
-     * @return null|object
+     * @return object
+     * @throws EntrypointRequestException
      */
     public function post(array $options = [])
     {
         $this->validateResource();
+
         // todo handle parameters
+
         try {
             /** @var ResponseInterface $response */
             $response = $this->redmineClient->post($this->path, $options);
-            $object = $this->serializer->deserialize(
-                $response->getBody()->getContents(),
-                $this->resourceClass,
-                RequestOptions::JSON
-            );
-
-            return $object;
-        } catch (\Exception $e) {
+        } catch (RequestException $e) {
             $this->logger->error($e->getMessage());
+            throw new EntrypointRequestException();
         }
 
-        return null;
+        return $this->deserialize($response);
     }
 
     /**
      * @param array $options
      *
-     * @return null|object
+     * @return object
+     * @throws EntrypointRequestException
      */
     public function put(array $options = [])
     {
         $this->validateResource();
+
         // todo handle parameters
+
         try {
             /** @var ResponseInterface $response */
             $response = $this->redmineClient->put($this->path, $options);
-            $object = $this->serializer->deserialize(
-                $response->getBody()->getContents(),
-                $this->resourceClass,
-                RequestOptions::JSON
-            );
-
-            return $object;
-        } catch (\Exception $e) {
+        } catch (RequestException $e) {
             $this->logger->error($e->getMessage());
+            throw new EntrypointRequestException();
         }
 
-        return null;
+        return $this->deserialize($response);
     }
 
     /**
      * @param array $options
      *
-     * @return null|object
+     * @return object
+     * @throws EntrypointRequestException
      */
     public function patch(array $options = [])
     {
         $this->validateResource();
+
         // todo handle parameters
+
         try {
             /** @var ResponseInterface $response */
             $response = $this->redmineClient->patch($this->path, $options);
-            $object = $this->serializer->deserialize(
-                $response->getBody()->getContents(),
-                $this->resourceClass,
-                RequestOptions::JSON
-            );
-
-            return $object;
-        } catch (\Exception $e) {
+        } catch (RequestException $e) {
             $this->logger->error($e->getMessage());
+            throw new EntrypointRequestException();
         }
 
-        return null;
+        return $this->deserialize($response);
     }
 
     /**
      * @param array $options
      *
-     * @return null|object
+     * @return object
+     * @throws EntrypointRequestException
      */
     public function delete(array $options = [])
     {
         $this->validateResource();
+
         // todo handle parameters
+
         try {
             /** @var ResponseInterface $response */
             $response = $this->redmineClient->delete($this->path, $options);
-            $object = $this->serializer->deserialize(
-                $response->getBody()->getContents(),
-                $this->resourceClass,
-                RequestOptions::JSON
-            );
-
-            return $object;
-        } catch (\Exception $e) {
+        } catch (RequestException $e) {
             $this->logger->error($e->getMessage());
+            throw new EntrypointRequestException();
         }
 
-        return null;
+        return $this->deserialize($response);
     }
 }

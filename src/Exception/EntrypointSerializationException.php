@@ -2,7 +2,7 @@
 
 namespace Gdelre\RedmineApiBundle\Exception;
 
-class EntrypointConnectException extends EntrypointException
+class EntrypointSerializationException extends EntrypointException
 {
-    protected $message = 'Redmine connection error.';
+    protected $message = 'Serialization error.';
 }

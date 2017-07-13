@@ -15,14 +15,17 @@ use Gdelre\RedmineApiBundle\Entity\TimeEntryActivity;
 use Gdelre\RedmineApiBundle\Entity\Tracker;
 use Gdelre\RedmineApiBundle\Entity\User;
 
+/**
+ * todo handle url with special char when psr7ize them in RedmineClientPass 
+ */
 interface EntrypointInterface
 {
     const ENTRYPOINTS = [
-        [
-            'name'           => 'attachment',
-            'path'           => '/attachments/{id}',
-            'resource_class' => null,
-        ],
+//        [
+//            'name'           => 'attachment',
+//            'path'           => '/attachments/{id}',
+//            'resource_class' => null,
+//        ],
         [
             'name'           => 'custom_field',
             'path'           => '/custom_fields',
@@ -43,11 +46,11 @@ interface EntrypointInterface
             'path'           => '/issue_statuses',
             'resource_class' => IssueStatus::class,
         ],
-        [
-            'name'           => 'issue_relation',
-            'path'           => '/issues/{id}/relations',
-            'resource_class' => null,
-        ],
+//        [
+//            'name'           => 'issue_relation',
+//            'path'           => '/issues/{id}/relations',
+//            'resource_class' => null,
+//        ],
         [
             'name'           => 'issue_priority',
             'path'           => '/enumerations/issue_priorities',
@@ -63,31 +66,31 @@ interface EntrypointInterface
             'path'           => '/projects',
             'resource_class' => Project::class,
         ],
-        [
-            'name'           => 'project_news',
-            'path'           => '/projects/{id}/news',
-            'resource_class' => News::class,
-        ],
-        [
-            'name'           => 'project_version',
-            'path'           => '/projects/{id}/versions',
-            'resource_class' => null,
-        ],
-        [
-            'name'           => 'project_wiki',
-            'path'           => '/projects/{id}/wiki/index',
-            'resource_class' => null,
-        ],
-        [
-            'name'           => 'project_membership',
-            'path'           => '/projects/{id}/memberships',
-            'resource_class' => null,
-        ],
-        [
-            'name'           => 'project_issue_category',
-            'path'           => '/projects/{id}/issue_categories',
-            'resource_class' => null,
-        ],
+//        [
+//            'name'           => 'project_news',
+//            'path'           => '/projects/{id}/news',
+//            'resource_class' => News::class,
+//        ],
+//        [
+//            'name'           => 'project_version',
+//            'path'           => '/projects/{id}/versions',
+//            'resource_class' => null,
+//        ],
+//        [
+//            'name'           => 'project_wiki',
+//            'path'           => '/projects/{id}/wiki/index',
+//            'resource_class' => null,
+//        ],
+//        [
+//            'name'           => 'project_membership',
+//            'path'           => '/projects/{id}/memberships',
+//            'resource_class' => null,
+//        ],
+//        [
+//            'name'           => 'project_issue_category',
+//            'path'           => '/projects/{id}/issue_categories',
+//            'resource_class' => null,
+//        ],
         [
             'name'           => 'query',
             'path'           => '/queries',
