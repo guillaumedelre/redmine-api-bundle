@@ -41,12 +41,17 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
     private $path;
 
     /**
+     * @var string
+     */
+    private $defaultFormat;
+
+    /**
      * Entrypoint constructor.
      *
-     * @param LoggerInterface $logger
+     * @param LoggerInterface     $logger
      * @param SerializerInterface $serializer
-     * @param Client $redmineClient
-     * @param array $definition
+     * @param Client              $redmineClient
+     * @param array               $definition
      */
     public function __construct(
         LoggerInterface $logger,
@@ -59,8 +64,8 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
         $this->redmineClient = $redmineClient;
         $this->name = $definition['name'];
         $this->resourceClass = $definition['resource_class'];
-        $defaultFormat = $definition['format'] ?? self::DEFAULT_FORMAT;
-        $this->path = "$definition[path].$defaultFormat";
+        $this->defaultFormat = $definition['format'] ?? self::DEFAULT_FORMAT;
+        $this->path = "$definition[path]." . $this->defaultFormat;
     }
 
     /**
@@ -105,17 +110,18 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
 
     /**
      * @param ResponseInterface $response
+     * @param string            $format
      *
      * @return object
      * @throws EntrypointSerializationException
      */
-    private function deserialize(ResponseInterface $response)
+    private function deserialize(ResponseInterface $response, string $format = self::DEFAULT_FORMAT)
     {
         try {
             $object = $this->serializer->deserialize(
                 $response->getBody()->getContents(),
                 $this->resourceClass,
-                'xml',
+                $format,
                 ['data_key' => $this->name]
             );
         } catch (\Exception $e) {
@@ -128,11 +134,13 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
 
     /**
      * @param string $uri
-     * @param array $options
+     * @param array  $options
+     * @param string $format
      *
      * @return object
+     * @throws EntrypointRequestException
      */
-    public function get(string $uri = '', array $options = [])
+    public function get(string $uri = '', array $options = [], string $format = self::DEFAULT_FORMAT)
     {
         $this->validateResource();
 
@@ -142,10 +150,10 @@ final class Entrypoint implements LoggerAwareInterface, SerializerAwareInterface
             /** @var ResponseInterface $response */
             $response = $this->redmineClient->get($this->path . $uri, $options);
         } catch (RequestException $e) {
-            $this->logger->error($e->getMessage());
+            throw new EntrypointRequestException('Redmine request error', 0, $e);
         }
 
-        return $this->deserialize($response);
+        return $this->deserialize($response, $format);
     }
 
     /**
