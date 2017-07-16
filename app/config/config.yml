@@ -7,6 +7,7 @@ framework:
 gdelre_redmine_api:
     base_uri: 'https://projects.francemm.com'
     timeout: '2.0'
+    verify: false
     credential:
         username: 'gdelre'
         password: 'root'

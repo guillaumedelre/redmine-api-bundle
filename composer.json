@@ -13,7 +13,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Gdelre\\RedmineApiBundle\\": "src/"
+      "Gdelre\\RedmineApiBundle\\": "src/",
+      "Gdelre\\RedmineApiBundle\\App\\": "app/"
     }
   },
   "autoload-dev": {

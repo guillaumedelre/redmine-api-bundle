@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('base_uri')->defaultValue('')->end()
                 ->scalarNode('timeout')->defaultValue('2.0')->end()
+                ->booleanNode('verify')->defaultFalse()->end()
                 ->arrayNode('credential')->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('username')->defaultValue('')->end()

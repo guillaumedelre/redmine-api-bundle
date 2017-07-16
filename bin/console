@@ -6,9 +6,9 @@
  * Time: 09:04
  */
 
-namespace Gdelre\RedmineApiBundle\Tests\App;
+namespace Gdelre\RedmineApiBundle\App;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 

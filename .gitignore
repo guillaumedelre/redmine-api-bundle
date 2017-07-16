@@ -1,7 +1,7 @@
 /.idea
 /composer.lock
-composer.lock/vendor
-/tests/App/cache
-/tests/App/logs
 /nohup.out
 /vendor
+/build/
+/app/cache/
+/app/logs/

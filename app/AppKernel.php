@@ -1,6 +1,6 @@
 <?php
 
-namespace Gdelre\RedmineApiBundle\Tests\App;
+namespace Gdelre\RedmineApiBundle\App;
 
 use Gdelre\RedmineApiBundle\GdelreRedmineApiBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;

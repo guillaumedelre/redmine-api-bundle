@@ -12,17 +12,17 @@ class Project
     /**
      * @var string
      */
-    protected $name;
+    protected $name = '';
 
     /**
      * @var string
      */
-    protected $identifier;
+    protected $identifier = '';
 
     /**
      * @var string
      */
-    protected $description;
+    protected $description = '';
 
     /**
      * @var int
@@ -42,7 +42,7 @@ class Project
     /**
      * @var bool
      */
-    protected $isPublic;
+    protected $isPublic = false;
 
     /**
      * @return int
